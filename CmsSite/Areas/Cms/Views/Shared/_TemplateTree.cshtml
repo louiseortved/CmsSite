@@ -1,0 +1,15 @@
+﻿@model List<FileInfo>
+
+
+
+<ul>
+
+    @foreach (var file in Model)
+    {
+        <li>
+            <a href="/Cms/Admin/templates/@file.Name.Replace(".cshtml", "")">
+                @file.Name
+            </a>
+        </li>
+    }
+</ul>

@@ -1,0 +1,24 @@
+﻿@model dynamic 
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<div class="col-lg-10">
+    @CmsApi.GetProperty(Model, "editor")
+</div>
+
+
+<h2>@Model.Name</h2>
+
+<p>@Model.PageId</p>
+<p>@Model.Parent.Name</p>
+<p>@Model.CreateDate</p>
+
+<p>@Model.Url</p>
+<p>@Model.IconName</p>
+
+
+@*@ @CmsApi.GetRootPage()@*@

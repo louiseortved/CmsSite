@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "Template";
+}
+
+
+
+
+<div id="main">
+    <!-- start:breadcrumb -->
+    <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li class="active">New Pages
+        </li>
+    </ol>
+    
+    <div id="summernote">Write me :-)</div>
+
+</div>
+
+@section scripts{
+    <script>
+  
+        $('#summernote').summernote({
+            height: 300,                 // set editor height
+            minHeight: null,             // set minimum height of editor
+            maxHeight: null,             // set maximum height of editor
+            focus: true                  // set focus to editable area after initializing summernote
+        });
+  
+
+</script>
+}

@@ -1,0 +1,158 @@
+﻿@model MvcHtmlString
+
+@{
+    ViewBag.Title = "Templates";
+}
+
+@section style{
+    <link href="~/Scripts/codemirror-2.37/lib/codemirror.css" rel="stylesheet" />
+
+}
+
+<div id="main">
+    <!-- start:breadcrumb -->
+    <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li class="active">
+            Templates
+        </li>
+    </ol>
+
+    <div class="row">
+        <div class="col-lg-5">
+            @Html.Action("TemplatePartial")
+        </div>
+        <div class="col-lg-5 col-lg-push-4">
+            <button class="btn btn-success" id="save">Save</button>
+            <button class="btn btn-danger" id="delete">Delete</button>
+            <a class="btn btn-info" href="/Cms/Admin/CreateTemplate" id="create">Create New</a>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="panel panel-default">
+        <header class="panel-heading"> Code Area</header>
+        <textarea class="panel-body" id="textarea">@Model</textarea>
+    </div>
+</div>
+
+
+
+
+@section scripts{
+    <script src="~/Scripts/codemirror-2.37/lib/codemirror.js"></script>
+    <script>
+        $(function () {
+            var $templateName = $("#templateName");
+            var $textarea = $("#textarea");
+            var codearea = $("#textarea")[0];
+            var codemirror = CodeMirror.fromTextArea(codearea,
+            {
+                lineNumbers: true,
+                theme: "cobalt"
+
+            });
+
+            $("#save")
+                .on("click",
+                    function () {
+                        var urlsegment = window.location.pathname.split('/').pop();
+                        $.ajax(
+                        {
+                            type: "POST",
+                            url: "/cms/admin/savetemplate",
+                            //data: { templateName: $templateName.val(), html: $textarea.val() },
+                            data: { templateName: urlsegment, html: codemirror.getValue() },
+                            success: function (data) {
+                                console.log(data);
+                                window.location = "/Cms/Admin/Templates/" + data;
+                            }
+                        });
+
+                    });
+
+
+            $('#delete')
+                .on("click",
+                    function () {
+                        var urlsegment = window.location.pathname.split('/').pop();
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/Cms/Admin/DeleteTemplate/",
+                            data: { templateName: urlsegment },
+                            success: function (data) {
+                                alert("tak for kaffe");
+                                //console.log(data);
+                                window.location = "/Cms/Admin/Templates/";
+                            }
+                        });
+                    });
+
+            //$("#delete")
+            //    .on("click",
+            //        function() {
+            //            var urlsegment = window.location.pathname.split('/').pop();
+            //            $.ajax(
+            //                $.ajax({
+            //                    type: "GET",
+            //                    url: "/Cms/Admin/DeleteTemplates/",
+            //                    data: { templateName: urlsegment },
+            //                    Success: function() {
+            //                        window.location = "/Cms/Admin/Templates" + data;
+            //                    }
+
+            //                });
+
+            //        });
+
+        });
+    </script>
+}
+
+
+@*@section scripts{
+        <script src="~/Scripts/codemirror-2.37/lib/codemirror.js"></script>
+        <script>
+            $(function () {
+
+                var codearea = $("#textarea"[0]);
+                var codemirror = CodeMirror.fromTextArea(codearea,
+                {
+                    lineNumbers: true
+                });
+
+                //var $templateName = $("#templateName");
+                //var $textarea = $("#textarea");
+
+                $("#save")
+                    .on("click",
+                        function () {
+                            var urlsegment = window.location.pathname.split('/').pop();
+                            $.ajax(
+                            {
+                                type: "POST",
+                                url: "/cms/admin/savetemplate",
+                                data: { templateName: urlsegment, html: codemirror.getValue() },
+                                success: function (data) {
+                                    //console.log(data);
+                                    window.location = "/Cms/Admin/Templates/" + data;
+                                }
+                            });
+
+                        });
+            })
+        </script>
+    }*@
+
+
+
+
+
+
+
+

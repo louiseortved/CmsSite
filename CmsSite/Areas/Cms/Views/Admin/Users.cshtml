@@ -1,0 +1,214 @@
+﻿@using CmsSite.Areas.Cms.Extensions
+@model IEnumerable<CmsSite.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Users";
+}
+
+
+<div id="main">
+    <!-- start:breadcrumb -->
+    <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li>Dashboard</li>
+        <li class="active">Users & Roles</li>
+    </ol>
+    <!-- end:breadcrumb -->
+
+    <div class="row" id="home-content">
+        <div class="col-lg-10 col-lg-offset-1">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs md-pills pills-ins" role="tablist" id="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#panel11" role="tab"><i class="fa fa-user"></i> Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#panel12" role="tab"><i class="fa fa-clone"></i> Roles</a>
+                </li>
+                @*<li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#panel13" role="tab"><i class="fa fa-envelope"></i> Contact</a>
+                    </li>*@
+            </ul>
+
+            <!-- Tab panels -->
+            <div class="tab-content">
+
+                <!--Panel 1-->
+                <div class="tab-pane fade in show active" id="panel11" role="tabpanel">
+                    <br>
+
+                    <table class="table">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UserName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PhoneNumber)
+                            </th>
+
+                            <th>
+                                Roles
+                            </th>
+                            <th>
+                                Actions
+                            </th>
+                        </tr>
+
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => user.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => user.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => user.PhoneNumber)
+                                </td>
+                                <td>
+                                    @foreach (var role in IdentityService.GetRoles() )
+                                    {
+                                        if (IdentityService.IsUserInRole(user.Id, role.Name))
+                                        {
+                                            <a href="#"  class="update-role" data-userid="@user.Id" data-value="false" data-role="@role.Name" style="color:green">@role.Name</a>
+
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="update-role" data-userid="@user.Id" data-value="true" data-role="@role.Name"  style="color:red">@role.Name</a>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = user.Id }) |
+                                    @*@Html.ActionLink("Details", "Details", new { id=item.Id }) |*@
+                                    @Html.ActionLink("Delete", "DeleteUser", new { id = user.Id })
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+
+                </div>
+                <!--/.Panel 1-->
+                <!--Panel 2-->
+                <div class="tab-pane fade" id="panel12" role="tabpanel">
+                    <br>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+
+                </div>
+                <!--/.Panel 2-->
+                <!--Panel 3-->
+                <div class="tab-pane fade" id="panel13" role="tabpanel">
+                    <br>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+
+                </div>
+                <!--/.Panel 3-->
+                <!--Panel 4-->
+                <div class="tab-pane fade" id="panel14" role="tabpanel">
+                    <br>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+
+                </div>
+                <!--/.Panel 4-->
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<div id="add-user-form" class="well">
+    <h3 class="text-center">Add User</h3>
+    <form class="card-body" action="/Cms/Admin/CreateUser" method="post" @*id="add-page"*@>
+
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label for="username">User Name</label>
+            <input id="username" type="text" name="UserName" placeholder="Username.." class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="useremail">User Email</label>
+            <input id="useremail" type="email" name="Email" placeholder="Email" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="userphone">User Phone</label>
+            <input id="userphone" type="text" name="PhoneNumber" placeholder="Phone" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" name="Password" placeholder="password" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <button id="cancel-prop" class="btn  btn-danger" type="reset">Cancel</button>
+            <button type="submit" class="btn  btn-success">Save</button>
+        </div>
+    </form>
+    
+   </div> 
+    
+    <div id="add-role-form" class="well">
+        <h3 class="text-center">Add Role</h3>
+        <form class="card-body" action="/Cms/Admin/CreateRole" method="post" @*id="add-page"*@>
+
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label for="Rolename">Role Name</label>
+                <input id="Rolename" type="text" name="roleName" placeholder="Rolename.." class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <button id="cancel-prop" class="btn  btn-danger" type="reset">Cancel</button>
+                <button type="submit" class="btn  btn-success">Save</button>
+            </div>
+        </form>
+
+    </div>
+
+
+
+@section scripts{
+    <script>
+        $(".update-role")
+            .click(function(event) {
+                event.preventDefault();
+                var id = $(this).data("userid");
+                var role = $(this).data("role");
+                var value = $(this).data("value");
+
+
+                $.ajax({
+                    url: '/Cms/Admin/UpdateUserRole',
+                    type: 'Get',
+                    data: { userid: id, rolename: role, add: value },
+                    success: function(data) {
+                        window.location = '/Cms/Admin/Users';
+                    }
+            });
+
+            });
+      
+       
+
+    </script>
+}

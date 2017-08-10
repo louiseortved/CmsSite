@@ -1,0 +1,187 @@
+﻿@using System.Collections.Specialized
+@using CmsSite.Areas.Cms.Extensions
+@model CmsSite.Models.CmsPage
+
+@{
+    ViewBag.Title = "EditPage";
+}
+
+
+@section style{
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
+}
+
+<div id="main">
+    <!-- start:breadcrumb -->
+    <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li>Dashboard</li>
+        <li>Pages</li>
+        <li class="active">Edit Pages</li>
+    </ol>
+    <!-- end:breadcrumb -->
+
+    <div class="row" id="home-content">
+        <div class="col-lg-10 col-lg-offset-1">
+        
+            <form action="/Cms/Admin/EditPage" method="post">
+                <button  class="btn  btn-success" type="submit">Save</button>
+                <button id="add-page" class="btn  btn-info"><i class="fa fa-plus"></i></button>
+
+                @Html.AntiForgeryToken()              
+                <div class="col-lg-10">
+                    Pageid:        @Model.PageId           @Html.HiddenFor(p => p.PageId)
+
+                    @Html.HiddenFor(p => p.Alias)
+                    @Html.HiddenFor(p => p.TemplateId)
+                    @Html.HiddenFor(p => p.ParentId)
+                    @Html.HiddenFor(p => p.Name)
+                    @Html.HiddenFor(p => p.Url)
+                    @Html.HiddenFor(p => p.Level)
+                    @Html.HiddenFor(p => p.Order)
+                    @Html.HiddenFor(p => p.CreateDate)
+
+                </div>
+
+                <!--show details about page-->
+                <!--render properties-->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Property Name</th>
+                            @*<th>Property Value</th>*@
+                            <th>Property Editor</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                        </tr>
+
+
+                        @foreach (var property in Model.Properties)
+                        {
+                            <tr>
+                                <td>
+                                    @property.Name <br /> <span class="text-muted">@property.Alias</span>
+                                </td>
+                                <td>
+                                    @AdminHelper.RenderPropType(property.Type, property.Value, property.Alias)
+                                </td>
+                                <td>
+                                    <a href="Cms/Admin/Deleteproperty?id=@property.PropertyId"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <dl class="dl-horizontal">
+                    <dd>
+                        @Html.DisplayFor(model => model.Parent.Name)
+                    </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Template.Name)
+                    </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.CreateDate)
+                    </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Alias)
+                    </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Url)
+                    </dd>
+
+                    <dd>
+                        @Html.EditorFor(model => model.ShowInMenu)
+                    </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Level)
+                    </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Order)
+                    </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.IconName)
+                    </dd>
+
+                </dl>
+
+            </form>
+
+            <div id="addform" class="card well">
+                <h3>Add Property</h3>
+                <form class="card-body" action="/Cms/Admin/CreateProperty" method="post" id="addpage">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="PageId" value="@Model.PageId" />
+
+
+                    <div class="form-group">
+                        <label for="propname">Property Name</label>
+                        <input id="propname" type="text" name="Name" class="form-control" placeholder="property name.." />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="propeditor">Property Type</label>
+                        @Html.DropDownList("Type", AdminHelper.GetPropTypes(), htmlAttributes: new { @id = "propeditor", @class = "form-control" })
+                    </div>
+
+
+                    @*<div class="form-group">
+                            <label for="icon">Icon</label>
+                            <input id="icon" type="text" name="Icon" />
+                        </div>*@
+
+                    <div class="form-group">
+                        <button id="cancel-prop" class="btn  btn-danger"type="reset">Cancel</button>
+                        <button type="submit" class="btn  btn-success">Save</button>
+                    </div>
+                </form>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
+    <script>
+        $('.editor').summernote({
+            height: 200,
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['frontsize', ['frontsize']],
+                ['para', ['ol', 'ul', 'para']],
+                ['video', ['video']]
+            ]
+        });
+    </script>
+
+
+    <script>
+
+        $("#add-page").on('click',
+            function () {
+                $("#addform").addClass("enabled");
+                $("#add-page").prop("disabled", true);
+
+            }
+        );
+
+        $("#cancel-prop").on('click',
+            function (e) {
+                e.preventDefault();
+                $("#form").trigger("reset");
+                $("#addform").removeClass("enabled");
+                $("#add-page").prop("disabled", false);
+            });
+
+    </script>
+}

@@ -1,0 +1,109 @@
+﻿@model MvcHtmlString
+@{
+    ViewBag.Title = "CreateTemplate";
+}
+
+@section style{
+    <link href="~/Scripts/codemirror-2.37/lib/codemirror.css" rel="stylesheet" />
+
+}
+
+<div id="main">
+    <!-- start:breadcrumb -->
+    <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li class="active">
+            Create New Template
+        </li>
+    </ol>
+
+    @Html.Action("TemplatePartial")
+
+
+
+    <button class="btn btn-success" id="save">Save</button>
+    <input id="templateName" type="text" required />
+
+    <textarea id="textarea">@Model</textarea>
+
+
+</div>
+
+
+
+@section scripts{
+    <script src="~/Scripts/codemirror-2.37/lib/codemirror.js"></script>
+    <script>
+        $(function () {
+            //var $templateName = $("#templateName");
+            //var $textarea = $("#textarea");
+                var codearea = $("#textarea")[0];
+                var codemirror = CodeMirror.fromTextArea(codearea,
+                {
+                    lineNumbers: true,
+                    theme: "elegant"
+
+                });
+
+            $("#save")
+                .on("click",
+                    function () {
+                        var templateName = $("#templateName").val();
+
+                        if (templateName.length > 0) {
+                            //console.log(codemirror.getValue());
+                            $.ajax(
+                            {
+                                type: "POST",
+                                url: "/cms/admin/savetemplate",
+                                data: { templateName: templateName, html: codemirror.getValue() },
+                                //data: { templateName: templateName.val(), html: CodeMirror.getValue() },
+                                success:function(data) {
+                                    console.log(data);
+                                    window.location = "/Cms/Admin/Templates/" + data;
+                                }
+                            });
+                        }
+                    });
+        })
+    </script>
+}
+
+@*@section scripts{
+
+<script src="~/Scripts/codemirror-2.37/lib/codemirror.js"></script>
+    <script>
+        $(function () {
+            var $templateName = $("#templateName");
+            var codearea = $("#textarea"[0]);
+            var codemirror = CodeMirror.fromTextArea(codearea,
+            {
+                lineNumbers: true
+            });
+
+           
+            //var $textarea = $("#textarea");
+
+            $("#save")
+                .on("click",
+                    function () {
+                        if ($templateName.length > 0) {
+                            
+                 
+                        var urlsegment = window.location.pathname.split('/').pop();
+                    
+                            $.ajax(
+                            {
+                                type: "POST",
+                                url: "/cms/admin/savetemplate",
+                                data: { templateName: urlsegment, html: codemirror.getValue() },
+                                success: function (data) {
+                                    //console.log(data);
+                                    window.location = "/Cms/Admin/Templates/" + data;
+                                }
+                            });
+                        }
+                    });
+        })
+    </script>
+}*@
